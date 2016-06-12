@@ -4,7 +4,8 @@ export class Creature extends GameObject {
 	name: string;
 	image: Phaser.Sprite;
 	text: Phaser.Text;
-	textTween: Phaser.Tween;
+	textInTween: Phaser.Tween;
+	textOutTween: Phaser.Tween;
 	message: string;
 	talking: boolean;
 	
@@ -19,7 +20,7 @@ export class Creature extends GameObject {
 		if (!this.talking) {
 			this.text = this.game.add.text(80, 350, this.message, {});
 			this.text.alpha = 0;
-			this.game.add.tween(this.text).to({
+			this.textInTween = this.game.add.tween(this.text).to({
 				alpha: 1
 			}, 250, Phaser.Easing.Exponential.Out, true);
 			this.game.time.events.add(2000, this.removeText, this);
@@ -28,15 +29,17 @@ export class Creature extends GameObject {
 	}
 
 	removeText() {
-		this.textTween = this.game.add.tween(this.text).to({
+		this.textOutTween = this.game.add.tween(this.text).to({
 			alpha: 0
 		}, 250, Phaser.Easing.Exponential.Out, true);
 
-		this.textTween.onComplete.add(this.destroyText, this);
+		this.textOutTween.onComplete.add(this.destroyText, this);
 	}
 
 	destroyText() {
 		this.text.destroy();
+		this.game.tweens.remove(this.textInTween);
+		this.game.tweens.remove(this.textOutTween);
 		this.talking = false;
 	}
 
