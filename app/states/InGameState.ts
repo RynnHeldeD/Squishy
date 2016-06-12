@@ -1,16 +1,21 @@
+import {Creature} from 'app/objects/Creature';
+
 export class InGameState extends Phaser.State {
 	game: Phaser.Game;
 	graphics: Phaser.Graphics;
 	backgroundColor: number = 0xFAFBE3;
 	groundColor: number = 0x9FD6D2;
+
+	creature: Creature;
 	
 	constructor(game: Phaser.Game) {
 		super();
 		this.game = game;
+		this.creature = new Creature(game, 'Squishy');
 	}
 	
 	preload() {
-		this.game.load.image('blob', 'app/assets/images/blob.png');
+		this.creature.preload();
 	}
 	
 	create() {
@@ -25,10 +30,10 @@ export class InGameState extends Phaser.State {
 		this.graphics.endFill();
 		
 		// Draw a blob
-		this.game.add.sprite(50, 370, 'blob');
+		this.creature.create();
 	}
 	
 	update() {
-		
+		this.creature.update();
 	}
 }
